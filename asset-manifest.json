@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/react-webapp-onemap/static/css/main.875a75b1.css",
+    "main.js": "/react-webapp-onemap/static/js/main.39189e93.js",
+    "static/js/453.7ffdfcae.chunk.js": "/react-webapp-onemap/static/js/453.7ffdfcae.chunk.js",
+    "index.html": "/react-webapp-onemap/index.html",
+    "main.875a75b1.css.map": "/react-webapp-onemap/static/css/main.875a75b1.css.map",
+    "main.39189e93.js.map": "/react-webapp-onemap/static/js/main.39189e93.js.map",
+    "453.7ffdfcae.chunk.js.map": "/react-webapp-onemap/static/js/453.7ffdfcae.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.875a75b1.css",
+    "static/js/main.39189e93.js"
+  ]
+}
