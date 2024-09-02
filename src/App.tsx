@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import TextInput from './components/TextInput';
 import Dropdown from './components/Dropdown';
-import JsonDisplay from './components/JsonDisplay';
+import FoldableJsonDisplay from './components/FoldableJsonDisplay';
 import fetchJsonData from './components/utils/fetchJsonData';
 import countECharacters from './components/utils/countECharacters';
 import processData from './components/utils/processData';
 
 const App = () => {
   const [pastEntries, setPastEntries] = useState<string[]>([]);
-  const [jsonData, setJsonData] = useState<any>(null);
-  const [processedData, setProcessedData] = useState<any>(null);
+  const [responses, setResponses] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,22 +18,24 @@ const App = () => {
 
   const handleTextSubmit = async (text: string) => {
     setError(null);
-    const updatedEntries = [text, ...pastEntries].slice(0, 5);
+
+    // Filter out any existing entries of the same text
+    const updatedEntries = [text, ...pastEntries.filter(entry => entry !== text)].slice(0, 5);
     setPastEntries(updatedEntries);
     localStorage.setItem('pastEntries', JSON.stringify(updatedEntries));
 
     const response = await fetchJsonData(text);
     if (response.success) {
-      setJsonData(response.data);
       const count = countECharacters(response.data);
       const sortedData = processData(response.data);
-      setProcessedData({ count, sortedData });
+      setResponses([{ jsonData: response.data, processedData: { count, sortedData }, title: text }, ...responses]);
     } else {
       setError(response.message || 'Failed to fetch data. Please try again.');
     }
   };
 
   const handleSelect = (text: string) => {
+    // Call handleTextSubmit with the selected text without adding it again
     handleTextSubmit(text);
   };
 
@@ -44,7 +45,14 @@ const App = () => {
       <TextInput onSubmit={handleTextSubmit} />
       <Dropdown options={pastEntries} onSelect={handleSelect} />
       {error && <div className="text-red-500 mt-4">{error}</div>}
-      {jsonData && <JsonDisplay originalData={jsonData} processedData={processedData} />}
+      {responses.map((response, index) => (
+        <FoldableJsonDisplay
+          key={index}
+          title={`Response for "${response.title}"`}
+          jsonData={response.jsonData}
+          processedData={response.processedData}
+        />
+      ))}
     </div>
   );
 };

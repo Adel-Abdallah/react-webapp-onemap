@@ -5,31 +5,30 @@ interface TextInputProps {
 }
 
 const TextInput: React.FC<TextInputProps> = ({ onSubmit }) => {
-  const [inputText, setInputText] = useState('');
+  const [inputValue, setInputValue] = useState('');
 
-  const handleSubmit = () => {
-    if (inputText.trim()) {
-      onSubmit(inputText);
-      setInputText('');
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      onSubmit(inputValue);
+      setInputValue('');
     }
   };
 
   return (
-    <div className="mb-4">
+    <form onSubmit={handleSubmit}>
       <input
         type="text"
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        value={inputValue}
+        onChange={handleChange}
         placeholder="Enter query text"
-        className="border p-2 rounded w-full"
+        className="p-2 border rounded w-full"
       />
-      <button
-        onClick={handleSubmit}
-        className="mt-2 bg-blue-500 text-white p-2 rounded w-full"
-      >
-        Submit
-      </button>
-    </div>
+    </form>
   );
 };
 
