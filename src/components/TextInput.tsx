@@ -15,12 +15,12 @@ const TextInput: React.FC<TextInputProps> = ({ onSubmit }) => {
     e.preventDefault();
     if (inputValue.trim()) {
       onSubmit(inputValue);
-      setInputValue('');
+      setInputValue(''); // Clear the input after submission
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center space-x-2">
+    <form onSubmit={handleSubmit} className="flex items-center space-x-2 mb-4">
       <input
         type="text"
         value={inputValue}
@@ -32,7 +32,7 @@ const TextInput: React.FC<TextInputProps> = ({ onSubmit }) => {
         type="submit"
         className="bg-blue-500 text-white p-2 rounded"
       >
-        Submit
+        Query
       </button>
     </form>
   );

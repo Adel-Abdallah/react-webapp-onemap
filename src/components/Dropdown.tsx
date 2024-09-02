@@ -1,8 +1,16 @@
 import React from 'react';
 
-const Dropdown: React.FC<{ options: string[], onSelect: (text: string) => void }> = ({ options, onSelect }) => {
+interface DropdownProps {
+  options: string[];
+  onSelect: (text: string) => void;
+}
+
+const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
   return (
-    <select onChange={(e) => onSelect(e.target.value)} className="border p-2 rounded w-full">
+    <select
+      onChange={(e) => onSelect(e.target.value)}
+      className="p-2 border rounded w-full mb-4"
+    >
       <option value="">Select from past entries</option>
       {options.map((option, index) => (
         <option key={index} value={option}>

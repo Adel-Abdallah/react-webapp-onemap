@@ -19,7 +19,6 @@ const App = () => {
   const handleTextSubmit = async (text: string) => {
     setError(null);
 
-    // Filter out any existing entries of the same text
     const updatedEntries = [text, ...pastEntries.filter(entry => entry !== text)].slice(0, 5);
     setPastEntries(updatedEntries);
     localStorage.setItem('pastEntries', JSON.stringify(updatedEntries));
@@ -35,7 +34,6 @@ const App = () => {
   };
 
   const handleSelect = (text: string) => {
-    // Call handleTextSubmit with the selected text without adding it again
     handleTextSubmit(text);
   };
 
@@ -45,14 +43,16 @@ const App = () => {
       <TextInput onSubmit={handleTextSubmit} />
       <Dropdown options={pastEntries} onSelect={handleSelect} />
       {error && <div className="text-red-500 mt-4">{error}</div>}
-      {responses.map((response, index) => (
-        <FoldableJsonDisplay
-          key={index}
-          title={`Response for "${response.title}"`}
-          jsonData={response.jsonData}
-          processedData={response.processedData}
-        />
-      ))}
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        {responses.map((response, index) => (
+          <FoldableJsonDisplay
+            key={index}
+            title={`Response for "${response.title}"`}
+            jsonData={response.jsonData}
+            processedData={response.processedData}
+          />
+        ))}
+      </div>
     </div>
   );
 };
