@@ -20,7 +20,7 @@ const TextInput: React.FC<TextInputProps> = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex items-center space-x-2">
       <input
         type="text"
         value={inputValue}
@@ -28,6 +28,12 @@ const TextInput: React.FC<TextInputProps> = ({ onSubmit }) => {
         placeholder="Enter query text"
         className="p-2 border rounded w-full"
       />
+      <button
+        type="submit"
+        className="bg-blue-500 text-white p-2 rounded"
+      >
+        Submit
+      </button>
     </form>
   );
 };
