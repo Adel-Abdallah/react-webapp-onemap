@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import TextInput from './components/TextInput';
+import Dropdown from './components/Dropdown';
+import JsonDisplay from './components/JsonDisplay';
+import fetchJsonData from '../src/components/utils/fetchJsonData';
+import countECharacters from './components/utils/countECharacters';
+import processData from './components/utils/processData';
 
-function App() {
+const App: React.FC = () => {
+  const [pastEntries, setPastEntries] = useState<string[]>([]);
+  const [jsonData, setJsonData] = useState<any>(null);
+  const [processedData, setProcessedData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const savedEntries = JSON.parse(localStorage.getItem('pastEntries') || '[]');
+    setPastEntries(savedEntries);
+  }, []);
+
+  const handleTextSubmit = async (text: string) => {
+    setError(null);
+    const updatedEntries = [text, ...pastEntries].slice(0, 5);
+    setPastEntries(updatedEntries);
+    localStorage.setItem('pastEntries', JSON.stringify(updatedEntries));
+
+    const data = await fetchJsonData(text);
+    if (data) {
+      setJsonData(data);
+      const count = countECharacters(data);
+      const sortedData = processData(data);
+      setProcessedData({ count, sortedData });
+    } else {
+      setError('Failed to fetch data. Please try again.');
+    }
+  };
+
+  const handleSelect = (text: string) => {
+    handleTextSubmit(text);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Web Application</h1>
+      <TextInput onSubmit={handleTextSubmit} />
+      <Dropdown options={pastEntries} onSelect={handleSelect} />
+      {error && <div className="text-red-500 mt-4">{error}</div>}
+      {jsonData && <JsonDisplay originalData={jsonData} processedData={processedData} />}
     </div>
   );
-}
+};
 
 export default App;
