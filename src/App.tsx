@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import TextInput from './components/TextInput';
 import Dropdown from './components/Dropdown';
 import JsonDisplay from './components/JsonDisplay';
-import fetchJsonData from '../src/components/utils/fetchJsonData';
+import fetchJsonData from './components/utils/fetchJsonData';
 import countECharacters from './components/utils/countECharacters';
 import processData from './components/utils/processData';
 
-const App: React.FC = () => {
+const App = () => {
   const [pastEntries, setPastEntries] = useState<string[]>([]);
   const [jsonData, setJsonData] = useState<any>(null);
   const [processedData, setProcessedData] = useState<any>(null);
@@ -23,14 +23,14 @@ const App: React.FC = () => {
     setPastEntries(updatedEntries);
     localStorage.setItem('pastEntries', JSON.stringify(updatedEntries));
 
-    const data = await fetchJsonData(text);
-    if (data) {
-      setJsonData(data);
-      const count = countECharacters(data);
-      const sortedData = processData(data);
+    const response = await fetchJsonData(text);
+    if (response.success) {
+      setJsonData(response.data);
+      const count = countECharacters(response.data);
+      const sortedData = processData(response.data);
       setProcessedData({ count, sortedData });
     } else {
-      setError('Failed to fetch data. Please try again.');
+      setError(response.message || 'Failed to fetch data. Please try again.');
     }
   };
 
